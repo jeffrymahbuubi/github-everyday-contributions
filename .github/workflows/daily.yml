@@ -1,0 +1,36 @@
+name: Daily check-in
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-check-in
+  cancel-in-progress: false
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Append dated line
+        run: |
+          mkdir -p log
+          echo "- $(date -u +%F): daily check-in" >> "log/$(date -u +%Y).md"
+
+      - name: Commit and push
+        run: |
+          git config user.name "jeffrymahbuubi"
+          git config user.email "66674041+jeffrymahbuubi@users.noreply.github.com"
+          git add log
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore: daily check-in $(date -u +%F)"
+          git push
