@@ -5,7 +5,15 @@ An automated daily log. A scheduled GitHub Actions job refreshes the public GitH
 ## Stats
 
 <!-- stats:start -->
-_Not generated yet._
+_Updated 2026-10-31 (UTC)._
+
+| Metric | Value |
+|---|---|
+| Contributions, last 12 months | 336 |
+| Current streak (days) | 9 |
+| Public repos (not forks) | 26 |
+| Stars on public repos | 21 |
+| Top languages (by repo count) | Python (10), Jupyter Notebook (5), TypeScript (4), MATLAB (2), Shell (2) |
 <!-- stats:end -->
 
 ## How it works
