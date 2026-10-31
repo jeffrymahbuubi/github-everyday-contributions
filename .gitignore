@@ -1,0 +1,13 @@
+# Local agent state and session notes (KTD7) - never publish
+docs/handoff/
+.claude-flow/
+.swarm/
+agentdb.rvf
+agentdb.rvf.lock
+ruvector.db
+*.db
+*.db-wal
+*.db-shm
+
+# macOS
+.DS_Store
