@@ -18,6 +18,10 @@ _Updated 2026-10-31 (UTC)._
 
 ## How it works
 
+![Daily automation flow](docs/diagrams/daily-automation.svg)
+
+Diagram source: [`docs/diagrams/daily-automation.exd`](docs/diagrams/daily-automation.exd) (editable copy: `daily-automation.excalidraw`), drawn with diagram-axi.
+
 - The workflow in `.github/workflows/daily.yml` runs every day at 04:17 UTC.
 - `scripts/stats.py` rewrites the Stats section from public GitHub data. If the API fails, a value shows as `n/a` and the run still succeeds.
 - It appends `- <UTC date>: daily check-in` to `log/<UTC year>.md` and pushes the commit to `main`.

@@ -1,0 +1,34 @@
+title "github-everyday-contributions: daily automation"
+dir DOWN
+
+group triggers "Triggers" :orange {
+  cron(Cron 04:17 UTC\ndaily) :orange
+  manual(Manual dispatch\ngh workflow run) :orange
+}
+
+group runner "GitHub Actions runner (ubuntu-latest, free for public repos)" :blue {
+  checkout[Checkout main\nactions/checkout@v7]
+  stats[scripts/stats.py\nrefresh README stats]
+  logline[Append dated line\nlog/YYYY.md]
+  changed{Tree changed?} :yellow
+  commit[Commit as noreply author\n66674041+jeffrymahbuubi] :purple
+  skip(Exit 0, no commit) :dashed
+}
+
+group github "GitHub" :green {
+  api[(GitHub REST + GraphQL\npublic data)] :teal
+  repo[(Repo main branch)] :teal
+  graph[Contribution graph\nsquare for today] :green,bold
+}
+
+verify(One-time Claude routine\n2026-11-01 06:00 UTC) :pink,dashed
+
+cron, manual -> checkout : concurrency group
+checkout -> stats
+stats <-> api : GITHUB_TOKEN
+stats -> logline -> changed
+changed -> commit : yes
+changed --> skip : no
+commit -> repo : git push
+repo -> graph : author.login matches
+verify -.-> repo : read-only check
