@@ -18,6 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Refresh README stats
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_USER: ${{ github.repository_owner }}
+        run: python3 scripts/stats.py
       - name: Append dated line
         run: |
           mkdir -p log
@@ -27,7 +32,7 @@ jobs:
         run: |
           git config user.name "jeffrymahbuubi"
           git config user.email "66674041+jeffrymahbuubi@users.noreply.github.com"
-          git add log
+          git add log README.md
           if git diff --cached --quiet; then
             echo "Nothing to commit."
             exit 0
