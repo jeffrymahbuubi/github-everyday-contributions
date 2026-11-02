@@ -43,9 +43,9 @@
     {
       "id": "zone-g-triggers",
       "type": "rectangle",
-      "x": 159,
+      "x": 174,
       "y": 20,
-      "width": 601,
+      "width": 571,
       "height": 159,
       "angle": 0,
       "strokeColor": "#868e96",
@@ -139,7 +139,7 @@
     {
       "id": "zone-title-triggers",
       "type": "text",
-      "x": 175,
+      "x": 190,
       "y": 28,
       "width": 65.84,
       "height": 20,
@@ -256,9 +256,9 @@
     {
       "id": "node-cron",
       "type": "ellipse",
-      "x": 183,
+      "x": 198,
       "y": 58,
-      "width": 242,
+      "width": 212,
       "height": 97,
       "angle": 0,
       "strokeColor": "#1e1e1e",
@@ -295,7 +295,7 @@
     {
       "id": "node-manual",
       "type": "ellipse",
-      "x": 493,
+      "x": 478,
       "y": 58,
       "width": 243,
       "height": 97,
@@ -836,9 +836,9 @@
     {
       "id": "label-cron",
       "type": "text",
-      "x": 227.19,
+      "x": 238.59,
       "y": 81.5,
-      "width": 153.62,
+      "width": 130.82,
       "height": 50,
       "angle": 0,
       "strokeColor": "#1e1e1e",
@@ -862,20 +862,20 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Cron 04:17 UTC\ndaily",
+      "text": "Cron x4 UTC\nfirst run wins",
       "fontSize": 20,
       "fontFamily": 5,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "node-cron",
-      "originalText": "Cron 04:17 UTC\ndaily",
+      "originalText": "Cron x4 UTC\nfirst run wins",
       "autoResize": true,
       "lineHeight": 1.25
     },
     {
       "id": "label-manual",
       "type": "text",
-      "x": 537.04,
+      "x": 522.04,
       "y": 81.5,
       "width": 154.92,
       "height": 50,
@@ -1304,7 +1304,7 @@
     {
       "id": "edge-0",
       "type": "arrow",
-      "x": 183,
+      "x": 198,
       "y": 106.5,
       "width": 138,
       "height": 285.5,
@@ -1339,15 +1339,15 @@
           0
         ],
         [
-          -89,
+          -104,
           0
         ],
         [
-          -89,
+          -104,
           285.5
         ],
         [
-          49,
+          34,
           285.5
         ]
       ],
@@ -1378,10 +1378,10 @@
     {
       "id": "edge-1",
       "type": "arrow",
-      "x": 614.5,
-      "y": 155,
-      "width": 142.5,
-      "height": 237,
+      "x": 627.5,
+      "y": 153.7,
+      "width": 155.5,
+      "height": 266.3,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1414,11 +1414,11 @@
         ],
         [
           0,
-          237
+          266.3
         ],
         [
-          -142.5,
-          237
+          -155.5,
+          266.3
         ]
       ],
       "startBinding": {
@@ -1426,8 +1426,8 @@
         "focus": 0,
         "gap": 4,
         "fixedPoint": [
-          0.5,
-          1
+          0.6152,
+          0.9866
         ],
         "mode": "orbit"
       },
@@ -1437,7 +1437,7 @@
         "gap": 4,
         "fixedPoint": [
           1,
-          0.5
+          0.8784
         ],
         "mode": "orbit"
       },
@@ -2068,7 +2068,7 @@
       "id": "edge-label-0",
       "type": "text",
       "x": 24.76,
-      "y": 263.75,
+      "y": 256.25,
       "width": 138.48,
       "height": 20,
       "angle": 0,
@@ -2105,8 +2105,8 @@
     {
       "id": "edge-label-1",
       "type": "text",
-      "x": 545.26,
-      "y": 296.8,
+      "x": 558.26,
+      "y": 354.6,
       "width": 138.48,
       "height": 20,
       "angle": 0,
@@ -2138,7 +2138,7 @@
       "originalText": "concurrency group",
       "autoResize": true,
       "lineHeight": 1.25,
-      "labelPosition": 0.4
+      "labelPosition": 0.5
     },
     {
       "id": "edge-label-3",

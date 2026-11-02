@@ -1,8 +1,13 @@
 name: Daily check-in
 
 on:
+  # GitHub cron is best-effort: runs can start hours late or be dropped.
+  # Several slots across the UTC day; the guard step makes extra runs no-ops.
   schedule:
-    - cron: "17 4 * * *"
+    - cron: "17 1 * * *"
+    - cron: "47 6 * * *"
+    - cron: "17 12 * * *"
+    - cron: "47 17 * * *"
   workflow_dispatch:
 
 permissions:
@@ -18,17 +23,28 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Skip if today is already checked in
+        id: guard
+        run: |
+          if grep -qxF -- "- $(date -u +%F): daily check-in" "log/$(date -u +%Y).md" 2>/dev/null; then
+            echo "Already checked in today."
+            echo "done=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Refresh README stats
+        if: steps.guard.outputs.done != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           GH_USER: ${{ github.repository_owner }}
         run: python3 scripts/stats.py
       - name: Append dated line
+        if: steps.guard.outputs.done != 'true'
         run: |
           mkdir -p log
           echo "- $(date -u +%F): daily check-in" >> "log/$(date -u +%Y).md"
 
       - name: Commit and push
+        if: steps.guard.outputs.done != 'true'
         run: |
           git config user.name "jeffrymahbuubi"
           git config user.email "66674041+jeffrymahbuubi@users.noreply.github.com"

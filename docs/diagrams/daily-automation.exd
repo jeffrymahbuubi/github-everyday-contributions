@@ -2,7 +2,7 @@ title "github-everyday-contributions: daily automation"
 dir DOWN
 
 group triggers "Triggers" :orange {
-  cron(Cron 04:17 UTC\ndaily) :orange
+  cron(Cron x4 UTC\nfirst run wins) :orange
   manual(Manual dispatch\ngh workflow run) :orange
 }
 

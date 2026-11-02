@@ -22,7 +22,7 @@ _Updated 2026-11-01 (UTC)._
 
 Diagram source: [`docs/diagrams/daily-automation.exd`](docs/diagrams/daily-automation.exd) (editable copy: `daily-automation.excalidraw`), drawn with diagram-axi.
 
-- The workflow in `.github/workflows/daily.yml` runs every day at 04:17 UTC.
+- The workflow in `.github/workflows/daily.yml` runs at four times across the UTC day (01:17, 06:47, 12:17, 17:47); the first run of the day checks in and the rest skip, because GitHub can start scheduled runs hours late.
 - `scripts/stats.py` rewrites the Stats section from public GitHub data. If the API fails, a value shows as `n/a` and the run still succeeds.
 - It appends `- <UTC date>: daily check-in` to `log/<UTC year>.md` and pushes the commit to `main`.
 - Commits are authored with the account's GitHub noreply address so they appear on the profile's contribution graph.
