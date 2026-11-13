@@ -1,36 +1,41 @@
 title "github-everyday-contributions: daily automation"
 dir DOWN
 
-group triggers "Triggers" :orange {
-  cron(GitHub cron x4 UTC\nfirst run wins) :orange
-  cf(Cloudflare Worker cron x3\nworkflow_dispatch) :orange
-  watchdog(22:30 UTC watchdog\nfails run = email) :red
+group triggers "Triggers (any one is enough)" :orange {
+  cron(GitHub cron x4 UTC\n00:07 03:37 07:07 11:37) :orange
+  watchdog(GitHub cron 22:30 UTC\nwatchdog slot) :red
   manual(Manual dispatch\ngh workflow run) :orange
+}
+
+group cf "Cloudflare (independent of GitHub's scheduler)" :purple {
+  worker[Worker daily-checkin-trigger\ncron 02:15 09:15 16:15 UTC] :purple
 }
 
 group runner "GitHub Actions runner (ubuntu-latest, free for public repos)" :blue {
   checkout[Checkout main\nactions/checkout@v7]
-  stats[scripts/stats.py\nrefresh README stats\n(non-blocking)]
-  logline[Append dated line\nlog/YYYY.md]
-  changed{Tree changed?} :yellow
-  commit[Commit as noreply author\n66674041+jeffrymahbuubi] :purple
+  guard{Today already\nlogged?} :yellow
   skip(Exit 0, no commit) :dashed
+  stats[scripts/stats.py\nREADME stats\n(continue-on-error)]
+  logline[Append dated line\nlog/YYYY.md]
+  commit[Commit as noreply author\n66674041+jeffrymahbuubi] :purple
+  alert[Watchdog alert\nfail run if 22:30 slot\nhad to commit] :red
 }
 
 group github "GitHub" :green {
   api[(GitHub REST + GraphQL\npublic data)] :teal
   repo[(Repo main branch)] :teal
   graph[Contribution graph\nsquare for today] :green,bold
+  email(Failure email\nto owner) :red,dashed
 }
 
-verify(One-time Claude routine\n2026-11-01 06:00 UTC) :pink,dashed
-
-cron, cf, watchdog, manual -> checkout : concurrency group
-checkout -> stats
+cron, watchdog, manual -> checkout : concurrency group
+worker -> checkout : workflow_dispatch (GH_PAT)
+checkout -> guard
+guard --> skip : yes
+guard -> stats : no
 stats <-> api : GITHUB_TOKEN
-stats -> logline -> changed
-changed -> commit : yes
-changed --> skip : no
-commit -> repo : git push\n(rebase + retry x3)
+stats -> logline -> commit
+commit -> repo : push, rebase-retry x3
+commit -> alert
+alert -.-> email : only if late
 repo -> graph : author.login matches
-verify -.-> repo : read-only check
