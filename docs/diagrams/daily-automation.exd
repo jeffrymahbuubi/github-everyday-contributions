@@ -2,13 +2,15 @@ title "github-everyday-contributions: daily automation"
 dir DOWN
 
 group triggers "Triggers" :orange {
-  cron(Cron x4 UTC\nfirst run wins) :orange
+  cron(GitHub cron x4 UTC\nfirst run wins) :orange
+  cf(Cloudflare Worker cron x3\nworkflow_dispatch) :orange
+  watchdog(22:30 UTC watchdog\nfails run = email) :red
   manual(Manual dispatch\ngh workflow run) :orange
 }
 
 group runner "GitHub Actions runner (ubuntu-latest, free for public repos)" :blue {
   checkout[Checkout main\nactions/checkout@v7]
-  stats[scripts/stats.py\nrefresh README stats]
+  stats[scripts/stats.py\nrefresh README stats\n(non-blocking)]
   logline[Append dated line\nlog/YYYY.md]
   changed{Tree changed?} :yellow
   commit[Commit as noreply author\n66674041+jeffrymahbuubi] :purple
@@ -23,12 +25,12 @@ group github "GitHub" :green {
 
 verify(One-time Claude routine\n2026-11-01 06:00 UTC) :pink,dashed
 
-cron, manual -> checkout : concurrency group
+cron, cf, watchdog, manual -> checkout : concurrency group
 checkout -> stats
 stats <-> api : GITHUB_TOKEN
 stats -> logline -> changed
 changed -> commit : yes
 changed --> skip : no
-commit -> repo : git push
+commit -> repo : git push\n(rebase + retry x3)
 repo -> graph : author.login matches
 verify -.-> repo : read-only check

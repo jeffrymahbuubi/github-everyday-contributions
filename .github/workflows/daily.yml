@@ -1,13 +1,16 @@
 name: Daily check-in
 
 on:
-  # GitHub cron is best-effort: runs can start hours late or be dropped.
-  # Several slots across the UTC day; the guard step makes extra runs no-ops.
+  # GitHub cron is best-effort: runs start 1-7h late or get dropped.
+  # Slots sit early in the UTC day so late runs still land before midnight;
+  # the guard step makes extra runs no-ops. 22:30 is the watchdog slot.
+  # A Cloudflare Worker (scripts/cf-trigger) also calls workflow_dispatch.
   schedule:
-    - cron: "17 1 * * *"
-    - cron: "47 6 * * *"
-    - cron: "17 12 * * *"
-    - cron: "47 17 * * *"
+    - cron: "7 0 * * *"
+    - cron: "37 3 * * *"
+    - cron: "7 7 * * *"
+    - cron: "37 11 * * *"
+    - cron: "30 22 * * *"
   workflow_dispatch:
 
 permissions:
@@ -33,6 +36,7 @@ jobs:
 
       - name: Refresh README stats
         if: steps.guard.outputs.done != 'true'
+        continue-on-error: true  # stats are cosmetic; never block the check-in
         env:
           GH_TOKEN: ${{ github.token }}
           GH_USER: ${{ github.repository_owner }}
@@ -54,4 +58,19 @@ jobs:
             exit 0
           fi
           git commit -m "chore: daily check-in $(date -u +%F)"
-          git push
+          for i in 1 2 3; do
+            git push && exit 0
+            echo "Push rejected (attempt $i); rebasing onto origin/main."
+            sleep $((i * 5))
+            git pull --rebase origin main
+          done
+          echo "::error::Push failed after 3 attempts."
+          exit 1
+
+      - name: Watchdog alert
+        # The 22:30 slot only had work to do if every earlier trigger missed.
+        # It has checked in above; failing here makes GitHub email the owner.
+        if: github.event.schedule == '30 22 * * *' && steps.guard.outputs.done != 'true'
+        run: |
+          echo "::error::No check-in before 22:30 UTC; the watchdog committed it. Check the earlier triggers."
+          exit 1
