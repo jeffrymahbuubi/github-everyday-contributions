@@ -1,9 +1,11 @@
-# Deployed 2026-11-13 via the Cloudflare dashboard (not wrangler); this file
-# mirrors the live config. Keep both in sync if either changes.
+# Live Worker was set up in the Cloudflare dashboard (2026-11-13); this file
+# mirrors it so `npx -y wrangler@4 deploy` here can recreate it. GH_PAT secret
+# is set separately and survives deploys.
 name = "daily-checkin-trigger"
 main = "worker.js"
 compatibility_date = "2026-10-01"
 workers_dev = false   # no public URL; cron-only
+preview_urls = false
 
 [triggers]
 # UTC, offset from the GitHub slots (00:07, 03:37, 07:07, 11:37, 22:30).
