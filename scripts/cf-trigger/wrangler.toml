@@ -1,3 +1,5 @@
+# Deployed 2026-11-13 via the Cloudflare dashboard (not wrangler); this file
+# mirrors the live config. Keep both in sync if either changes.
 name = "daily-checkin-trigger"
 main = "worker.js"
 compatibility_date = "2026-10-01"
